@@ -1,0 +1,8 @@
+body {
+  padding-top: 60px;
+}
+
+.btn.new-request {
+  width: 140px;
+  margin-bottom: 10px;
+}
