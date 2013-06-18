@@ -14,15 +14,12 @@ define([
       this.$el.hide();
     },
     render: function() {
-      // ScopesCollection.fetch({ success: _.bind(function() {
-      //   this.$el.html(this.template({ scopes: ScopesCollection }));
-      // }, this)});
       this.$el.html(this.template({ scopes: this.collection.scopes }))
       return this;
     },
-    createNewRequest: function(ev) {
-      ev.preventDefault();
-      form = ev.currentTarget;
+    createNewRequest: function(e) {
+      e.preventDefault();
+      form = e.currentTarget;
       this.collection.create($(form).serializeObject());
       $("button.new-request").click();
       $("#new-request-form")[0].reset();

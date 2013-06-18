@@ -11,8 +11,8 @@ define([
     template: _.template(requestTemplate),
     events: {
       "click": "toggleDetail",
-      "click .delete": "deleteRequest"
-      // "click .done": "deleteRequest"
+      "click .delete": "deleteRequest",
+      "click .done": "toggleDone"
     },
     initialize: function() {
       this.listenTo(this.model, 'change', this.render);
@@ -34,6 +34,7 @@ define([
       }
     },
     deleteRequest: function(e) {
+      e.preventDefault();
       e.stopPropagation();
       var r=confirm("Are you sure?");
       if (r==true) {
@@ -46,6 +47,19 @@ define([
         });
         this.detailView.remove();
       }
+    },
+    toggleDone: function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.model.markAsDone();
+      self = this;
+      this.$el.effect("highlight", {color: '#62c462'}, "fast", function() {
+        self.$el.find('td').wrapInner('<div/>').parent()
+            .find('td > div').slideUp(400, function() {
+          $(this).parent().parent().remove();
+          self.remove();
+        });
+      });
     }
   });
   return RequestView;

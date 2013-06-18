@@ -17,11 +17,13 @@ define([
 
       this.listenTo(this.collection, 'add', this.addOne);
       this.listenTo(this.collection, 'reset', this.render);
-      this.collection.fetch();
+      this.collection.reset(JSON.parse(window.MyApp.bootstrap().requests));
 	  },
 	  render: function() {
       this.$el.find("#request-list > tbody").empty();
-	  	this.collection.each(this.addOne);
+      _.each(this.collection.remaining(), function(item) {
+        this.addOne(item);
+      }, this);
     },
     addOne: function(request) {
       var $collection = this.$el.find("#request-list > tbody"),
@@ -48,15 +50,15 @@ define([
     toggleNewRequestView: function(ev) {
       if (!$("#new-request-form").length > 0) {
       	var view = new NewRequestView({collection: this.collection});
-      	$(ev.currentTarget).after(view.render().el);
+      	$(ev.target).after(view.render().el);
         $("#new-request").slideDown(function() {
-          $(ev.currentTarget).text("Cancel");
-          $(ev.currentTarget).toggleClass("btn-primary");
+          $(ev.target).text("Cancel");
+          $(ev.target).toggleClass("btn-primary");
         });
       } else {
         $("#new-request").slideToggle(function() {
-          $(ev.currentTarget).text($(ev.currentTarget).text() === "Cancel" ? "New Request" : "Cancel");
-          $(ev.currentTarget).toggleClass("btn-primary");
+          $(ev.target).text($(ev.target).text() === "Cancel" ? "New Request" : "Cancel");
+          $(ev.target).toggleClass("btn-primary");
         });
       }
     }

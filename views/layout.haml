@@ -16,3 +16,13 @@
           %a.brand{:href => "#"} Requests App
     = yield
     = javascripts
+    :javascript
+      window.MyApp = {};
+      MyApp.bootstrap = function() {
+          return {
+              requests: '#{j @requests.to_json}',
+              scopes: '#{j @scopes.to_json}'
+          };
+      };
+    / #data{style: "display: none;"}
+    /   = @requests.to_json

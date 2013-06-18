@@ -7,7 +7,7 @@ define([
   var RequestsCollection = Backbone.Collection.extend({
     initialize: function() {
       this.scopes = ScopesCollection;
-      this.scopes.fetch();
+      this.scopes.reset(JSON.parse(window.MyApp.bootstrap().scopes));
     },
     model: Request,
     url: "/api/requests",

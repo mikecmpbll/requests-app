@@ -1,34 +1,17 @@
 helpers do
   include Rack::Utils
 
-  # Find a datamapper object from a urn e.g. /foos/1/bars/1, foos/2/bars, etc
-  def find(urn = [], obj = nil)
-    res_type, res_id = urn.shift
-    return false if !Models.const_defined?(res_type.classify)
-    if obj.nil?
-      obj = Models.const_get(res_type.classify).all
-    else
-      obj = obj.send(res_type)
-    end
-    obj = obj.get(res_id) unless res_id.nil?
-    return false if obj.nil?
-    urn_to_obj(urn, obj) unless urn.empty?
-    obj
-  end
+  JS_ESCAPE_MAP = { '\\' => '\\\\', '</' => '<\/', "\r\n" => '\n', "\n" => '\n', "\r" => '\n', '"' => '\\"', "'" => "\\'" }
 
-  def create(params, assocs)
-    obj = nil
-    assocs.each do |res_type, res_id|
-      return false if !Models.const_defined?(res_type.classify)
-      if !res_id.nil?
-        params["#{res_type.singularize}_id"] = res_id
-      else
-        obj = Models.const_get(res_type.classify).create(params)
-      end
+  def escape_javascript(javascript)
+    if javascript
+      javascript.gsub(/(\|<\/|\r\n|\342\200\250|[\n\r"'])/) {|match| JS_ESCAPE_MAP[match] }
+    else
+      ''
     end
-    !obj.nil? and obj.valid? ? obj : false
   end
-  
+  def j(javascript) escape_javascript(javascript) end
+
   # Convert a hash to a querystring for form population
   def hash_to_query_string(hash)
     hash.delete "password"
