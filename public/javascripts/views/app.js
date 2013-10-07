@@ -10,18 +10,18 @@ define([
 	var AppView = Backbone.View.extend({
 		el: $("#request-app"),
 		events: {
-			"click button.new-request": "toggleNewRequestView"
+			"click button.new-request": "toggleNewRequestView",
+      "change select#filter_scope": "filterByScope"
 		},
 	  initialize: function() {
       this.listIndexes = new Array();
-
       this.listenTo(this.collection, 'add', this.addOne);
       this.listenTo(this.collection, 'reset', this.render);
       this.collection.reset(JSON.parse(window.MyApp.bootstrap().requests));
 	  },
 	  render: function() {
       this.$el.find("#request-list > tbody").empty();
-      _.each(this.collection.remaining(), function(item) {
+      this.collection.applyFilters().each(function(item) {
         this.addOne(item);
       }, this);
     },
@@ -44,7 +44,6 @@ define([
         } else {
           $collection.append(newTr);
         }
-        // $(newTr).effect("highlight", "slow");
       }
     },
     toggleNewRequestView: function(ev) {
@@ -61,6 +60,13 @@ define([
           $(ev.target).toggleClass("btn-primary");
         });
       }
+    },
+    filterByScope: function(ev) {
+      if (_.isEmpty($(ev.target).val())) {
+        delete this.collection.filters.filterByScope
+      } else { this.collection.filters.filterByScope = new Array($(ev.target).val()); }
+      console.log(this.collection.filters.filterByScope);
+      this.render();
     }
 	});
 	return AppView;

@@ -1,6 +1,14 @@
 #request-app.container
   %h1 Requests
   %button.new-request.btn.btn-primary.fixed-width New Request
+  %form.form-inline.pull-right
+    .row_fluid
+      %label{for: :filter_scope} Filter by scope: 
+      %select#filter_scope
+        %option
+        - @scopes.each do |s|
+          %option{value: s.id}
+            = s.name
   %table#request-list.table
     %thead
       %tr

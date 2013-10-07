@@ -8,6 +8,7 @@ define([
     initialize: function() {
       this.scopes = ScopesCollection;
       this.scopes.reset(JSON.parse(window.MyApp.bootstrap().scopes));
+      this.filters = { remaining: null };
     },
     model: Request,
     url: "/api/requests",
@@ -16,11 +17,24 @@ define([
     },
     // Filter down the list of all requests that are finished.
     done: function() {
-      return this.without.apply(this, this.remaining());
+      return new RequestsCollection(this.without.apply(this, this.remaining()));
     },
-    // Filter down the list to only requests that are still not finished.
+    // Filter down the list to only requests that are not finished.
     remaining: function() {
-      return this.filter(function(request){ return _.isEmpty(request.get('completed_at')); });
+      return new RequestsCollection(this.filter(function(r){ return _.isEmpty(r.get('completed_at')) }));
+    },
+    // Filter the list by scope
+    filterByScope: function(scopes) {
+      return new RequestsCollection(this.filter(function(r){ return _.contains(scopes, r.scope.get('id').toString()) }));
+    },
+    applyFilters: function() {
+      var filtered = this;
+      for (var key in this.filters) {
+        if (this.filters.hasOwnProperty(key)) {
+          filtered = filtered[key](this.filters[key]);
+        }
+      }
+      return filtered
     }
   });
   return new RequestsCollection();
