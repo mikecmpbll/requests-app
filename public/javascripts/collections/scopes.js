@@ -6,7 +6,7 @@ define([
   var ScopesCollection = Backbone.Collection.extend({
     // Reference to this collection's model.
     model: Scope,
-    url: "/api/scopes"
+    url: "requests/api/scopes"
   });
   return new ScopesCollection();
 });

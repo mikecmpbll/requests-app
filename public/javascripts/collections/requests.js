@@ -11,7 +11,7 @@ define([
       this.filters = { remaining: null };
     },
     model: Request,
-    url: "/api/requests",
+    url: "requests/api/requests",
     comparator: function(request) {
       return -(new Date(request.get("created_at"))).getTime();
     },
