@@ -15,7 +15,7 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/object/try'
 require 'active_support/inflector'
 
-enable :sessions
+# enable :sessions
 
 require "./model"
 require "./routes"
